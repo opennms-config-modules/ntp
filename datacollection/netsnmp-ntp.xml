@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<datacollection-group name="Net-SNMP-NTP">
+     <group name="ntpq" ifType="ignore">
+        <mibObj oid=".1.3.6.1.4.1.8072.1.3.2.3.1.1.10.110.116.112.113.95.100.101.108.97" instance="121"  alias="ntpqdelay" type="integer"  />
+        <mibObj oid=".1.3.6.1.4.1.8072.1.3.2.3.1.1.11.110.116.112.113.95.106.105.116.116.101" instance="114"  alias="ntpqjitter" type="integer"  />
+        <mibObj oid=".1.3.6.1.4.1.8072.1.3.2.3.1.1.11.110.116.112.113.95.111.102.102.115.101" instance="116"  alias="ntpqoffset" type="integer"  />
+      </group>
+
+      <systemDef name="netsnmp">
+        <sysoidMask>.1.3.6.1.4.1.8072.</sysoidMask>
+        <collect>
+         <includeGroup>ntpq</includeGroup>
+        </collect>
+      </systemDef>
+
+</datacollection-group>
