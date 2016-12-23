@@ -3,26 +3,26 @@
 Configuration tests if the process _ntpd_ is running with detailed longterm data collection.
 Long term data collection for delay, offset and jitter in milliseconds.
 
- * _Delay_:  round trip time of queries
- * _Offset_: difference between reference time and system clock
- * _Jitter_: magnitude of jitter between several time queries
+* _Delay_:  round trip time of queries
+* _Offset_: difference between reference time and system clock
+* _Jitter_: magnitude of jitter between several time queries
 
 Requirements:
 
- * _ntpd_ should be installed and the command `ntpq -pn` should be executed successfully
- * _Net-SNMP_ must be installed and needs permissions to run `ntpq -pn` and the wrapper script `ntpwatch.sh`
- * OpenNMS HORIZON/MERIDIAN 1.8+/2015.1.0 using detectors in provisioning requisitions
- * OpenNMS 1.6.x users have to use _Capsd_ and it is not possible to have dedicated configuration files.
-   It is necessary to merge graph.properties and data collection configuration.
+* _ntpd_ should be installed and the command `ntpq -pn` should be executed successfully
+* _Net-SNMP_ must be installed and needs permissions to run `ntpq -pn` and the wrapper script `ntpwatch.sh`
+* OpenNMS HORIZON/MERIDIAN 1.8+/2015.1.0 using detectors in provisioning requisitions
+* OpenNMS 1.6.x users have to use _Capsd_ and it is not possible to have dedicated configuration files.
+  It is necessary to merge graph.properties and data collection configuration.
 
 Author: 02/17/2012 <ronny@opennms.org>
 License: AGPLv3
 
 == Net-SNMP configuration
 
-1. Copy `ntpwatch.sh` from scripts to `/usr/local/bin`
-2. Extend _Net-SNMP_ configuration to execute the `ntpwatch.sh` wrapper script in `/etc/snmpd.conf`
-
+. Copy `ntpwatch.sh` from scripts to `/usr/local/bin`
+. Extend _Net-SNMP_ configuration to execute the `ntpwatch.sh` wrapper script in `/etc/snmpd.conf`
++
 [source, shell]
 ----
 ########################################################################
@@ -33,8 +33,7 @@ extend ntpq_delay '/usr/local/bin/ntpwatch.sh delay'
 extend ntpq_jitter '/usr/local/bin/ntpwatch.sh jitter'
 extend ntpq_offset '/usr/local/bin/ntpwatch.sh offset'
 ----
-
-3. Restart _Net-SNMP_ with
+. Restart _Net-SNMP_ with
 
 [source, bash]
 ----
@@ -49,18 +48,15 @@ WARNING: Be sure the user context of `snmpd` has permissions to execute `ntpwatc
 
 == OpenNMS Configuration
 
-1. Copy `netsnmp-ntp.xml` to `${OPENNMS_HOME}/etc/datacollection`
-
-2. Copy `netsnmp-ntpq.properties` to `${OPENNMS_HOME}/etc/snmp-graph.properties.d`
-
-3. Add to `${OPENNMS_HOME}/etc/datacollection-config.xml`
-
+. Copy `netsnmp-ntp.xml` to `${OPENNMS_HOME}/etc/datacollection`
+. Copy `netsnmp-ntpq.properties` to `${OPENNMS_HOME}/etc/snmp-graph.properties.d`
+. Add to `${OPENNMS_HOME}/etc/datacollection-config.xml`
++
 [source, xml]
 ----
 <include-collection dataCollectionGroup="Net-SNMP-NTP"/>
 ----
-
-4. restart OpenNMS with
+. restart OpenNMS with
 
 [source, xml]
 ----
@@ -73,8 +69,8 @@ systemctl restart opennms
 
 ## Process monitoring
 
-1. Create a HostResourceSwRunMonitor in `${OPENNMS_HOME}/etc/poller-configuration.xml`
-
+. Create a HostResourceSwRunMonitor in `${OPENNMS_HOME}/etc/poller-configuration.xml`
++
 [source, xml]
 ----
 <service name="Proc-NTP" interval="300000" user-defined="false" status="on">                                                                 
@@ -86,15 +82,13 @@ systemctl restart opennms
 
 <monitor service="Proc-NTP" class-name="org.opennms.netmgt.poller.monitors.HostResourceSwRunMonitor"/>
 ----
-
-2. Restart OpenNMS with `service opennms restart`
-3. Assign a detector in Provisioning Requisition for the process ntpd
-
+. Restart OpenNMS with `service opennms restart`
+. Assign a detector in Provisioning Requisition for the process ntpd
++
 [source, xml]
 ----
 <detector class="org.opennms.netmgt.provision.detector.snmp.HostResourceSWRunDetector" name="Proc-NTP">
   <parameter value="ntpd" key="serviceToDetect"/>
 </detector>
 ----
-
-4. Synchronize the Provisioning requisition
+. Synchronize the Provisioning requisition
