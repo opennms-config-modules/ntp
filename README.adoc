@@ -60,10 +60,6 @@ WARNING: Be sure the user context of `snmpd` has permissions to execute `ntpwatc
 
 [source, xml]
 ----
-service opennms restart
-
-or
-
 systemctl restart opennms
 ----
 
